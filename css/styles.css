@@ -1,0 +1,10 @@
+#hint {
+	display: none;
+	color: #FFF;
+	background-color: #000;
+	position: absolute;
+	float: left;
+	padding: 15px;
+	text-align: center;
+	font-family: Arial;
+}

@@ -16,7 +16,6 @@ $(document).on('ready', function() {
     $.startFlowChart = function()
     {
         graph.addCells([proc1, proc2, proc3, proc4, proc5, link1, link2, link3, link4]);
-
     };
 
     $.setAllProcessBoxes = function()
@@ -25,7 +24,7 @@ $(document).on('ready', function() {
         proc2 = $.setProcessBox('Process 2', '#CCC',  1, 2, 1);
         proc3 = $.setProcessBox('Process 3', '#CCC',  1, 3, 1);
         proc4 = $.setProcessBox('Process 4', '#CCC',  2, 1, 3);
-        proc5 = $.setProcessBox('Process 5', '#CCC',  3, 2, 1);
+        proc5 = $.setProcessBox('Process 5', '#CCC',  3, 1, 1);
     };
 
     $.setAllLinks = function()
@@ -46,27 +45,55 @@ $(document).on('ready', function() {
             size: { width: 150, height: height },
             attrs: {
                 rect: { fill: color },
-                text: { text: label, fill: 'white' },
-                image: { 'xlink:href': 'img/loading.gif' }
+                text: { text: label, fill: 'white' }
             }
         });
     };
 
     $.setLink = function(source, target)
     {
+        positions = $.setLinksSourcesAndTargets(
+            source.attributes.position,
+            source.attributes.size,
+            target.attributes.position,
+            target.attributes.size
+        );
         return new joint.dia.Link({
-            source: { id: source.id },
-            target: { id: target.id },
-            connector: { name: 'rounded' },
+            source: { x: positions[0], y: positions[1] },
+            target: { x: positions[2], y: positions[3] },
             attrs: {
                 '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }
             }
         });
     };
 
-    // star up calls
+    $.setLinksSourcesAndTargets = function(srcPos, srcSize, targetPos, targetSize)
+    {
+        srcX = srcPos.x + srcSize.width;
+        srcY = srcPos.y + (srcSize.height / 2);
+        targetX = targetPos.x;
+        targetY = srcY;
+        if (targetY > (targetPos.y + targetSize.height)) {
+            targetY = targetPos.y + (targetSize.height / 2);
+            srcY = targetY;
+        }
+        return [srcX, srcY, targetX, targetY];
+    };
+
+    // start up calls
     $.setAllProcessBoxes();
     $.setAllLinks();
     $.startFlowChart();
+
+    // Interaction events handlers
+    $('.element').on('mouseover', function(e) {
+        var hint = $('#hint');
+        hint.css('left', e.pageX + 15);
+        hint.css('top', e.pageY + 15);
+        hint.show();
+    }).on('mouseout', function() {
+        $('#hint').hide();
+    });
+
 
 });
