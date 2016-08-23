@@ -3,16 +3,23 @@
 <head>
 	<link rel="stylesheet" href="css/joint.css">
 	<link rel="stylesheet" href="css/styles.css">
-	<script src="js/jquery-2.1.1.min.js"></script>
-	<script src="js/lodash.min.js"></script>
-	<script src="js/backbone-min.js"></script>
-	<script src="js/joint.js"></script>
+	<script src="js/libs/jquery-2.1.1.min.js"></script>
+	<script src="js/libs/lodash.min.js"></script>
+	<script src="js/libs/backbone-min.js"></script>
+	<script src="js/libs/joint.js"></script>
+	<script src="js/div-element.js"></script>
+	<script src="js/setup-methods.js"></script>
+	<script src="js/interaction-methods.js"></script>
 	<script src="js/routing.js"></script>
+	<script src="js/event-handlers.js"></script>
 </head>
 
 <body>
-  <div id="myholder"></div>
-  <div id="hint">Lorem ipsum dolor sit amet,<br/>consectetur adipiscing elit</div>
+	<div id="myholder"></div>
+	<div id="hint">
+		The first click will activate process.<br/><br/>
+		Every other click will increase<br/>total progress in 10%.
+	</div>
 </body>
 
 
