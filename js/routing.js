@@ -44,7 +44,11 @@ $(document).on('ready', function() {
         return new joint.shapes.basic.Rect({
             position: { x: leftPos, y: topPos },
             size: { width: 150, height: height },
-            attrs: { rect: { fill: color }, text: { text: label, fill: 'white' } }
+            attrs: {
+                rect: { fill: color },
+                text: { text: label, fill: 'white' },
+                image: { 'xlink:href': 'img/loading.gif' }
+            }
         });
     };
 
@@ -55,10 +59,7 @@ $(document).on('ready', function() {
             target: { id: target.id },
             connector: { name: 'rounded' },
             attrs: {
-                '.marker-target': {
-                    fill: '#333333',
-                    d: 'M 10 0 L 0 5 L 10 10 z'
-                }
+                '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }
             }
         });
     };
