@@ -1,4 +1,4 @@
-#hint {
+#tooltip {
 	display: none;
 	color: #FFF;
 	background-color: #000;
@@ -21,6 +21,7 @@
 
 .chartItem:hover {
 	cursor: pointer;
+	background-color: #336699;
 }
 
 .running {
@@ -32,16 +33,21 @@
 }
 
 .runned {
-	background-color: green;	
+	background-color: green;
 }
 
-.progress {
+.runned:hover {
+	background-color: green;
+}
+
+.bar {
     position: relative;
     width: 100%;
     height: 30px;
     background-color: grey;
+    margin-top: 10px;
 }
-#bar {
+.progress {
     position: absolute;
     width: 0%;
     height: 100%;

@@ -19,7 +19,7 @@ joint.shapes.html.ElementView = joint.dia.ElementView.extend({
     template: [
 		'<div class="chartItem notRunning">',
 		'	<label></label><br />',
-		'	<div class="progress"><div id="bar"></div></div>',
+		'	<div class="bar"><div class="progress"></div></div>',
 		'</div>'
     ].join(''),
 

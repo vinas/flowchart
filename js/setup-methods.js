@@ -2,6 +2,7 @@ var proc1, proc2, proc3, proc4, proc5, link1, link2, link3, link4, graph, paper;
 
 $(document).on('ready', function() {
 
+    var basicPadding = 30, boxWidth = 150, boxHeight = 80, basicColumnPadding = 100;
     graph = new joint.dia.Graph;
     paper = new joint.dia.Paper({
         el: $('#myholder'),
@@ -36,12 +37,17 @@ $(document).on('ready', function() {
 
     $.setProcessBox = function(label, color, col, row, size)
     {
-        leftPos = 250 * (col - 1) + 50;
-        topPos = 110 * (row - 1) + 50;
-        height = 80 * size + 30 * (size - 1);
+        var boxPosition = $.calcProcessBoxPosition(col, row, size);
+        height = boxHeight * size + basicPadding * (size - 1);
         return new joint.shapes.html.Element({
-            position: { x: leftPos, y: topPos },
-            size: { width: 150, height: height },
+            position: {
+                x: boxPosition.left,
+                y: boxPosition.top
+            },
+            size: {
+                width: boxWidth,
+                height: height
+            },
             label: label
         });
     };
@@ -68,13 +74,21 @@ $(document).on('ready', function() {
     {
         srcX = srcPos.x + srcSize.width;
         srcY = srcPos.y + (srcSize.height / 2);
-        targetX = targetPos.x - 8;
+        targetX = targetPos.x;
         targetY = srcY;
         if (targetY > (targetPos.y + targetSize.height)) {
             targetY = targetPos.y + (targetSize.height / 2);
             srcY = targetY;
         }
         return [srcX, srcY, targetX, targetY];
+    };
+
+    $.calcProcessBoxPosition = function(col, row)
+    {
+        var position = {};
+        position.left = (boxWidth + basicColumnPadding) * (col - 1) + basicPadding;
+        position.top = (boxHeight + basicPadding) * (row - 1) + basicPadding;
+        return position;
     };
 
 });

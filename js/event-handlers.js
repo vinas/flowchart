@@ -1,19 +1,23 @@
 $(document).on('ready', function() {
 
-    $('.chartItem').on('mouseover', function(e) {
-        $.displayMouseoverMsg($('#hint'), e.pageX, e.pageY)
-    })
+    $('.chartItem')
 
-    .on('mouseout', function() {
-        $.hideMouseoverMsg($('#hint'))
-    })
+        .on('mouseover', function(e) {
+            $.chartItemMouseOver($(this));
+            $.displayToolTip($('#tooltip'), e.pageX, e.pageY);
+        })
 
-    .on('click', function() {
-        obj = $(this);
-        if ($.isThisClickable(obj)) {
-            $.addPercentToBar(obj, 10);
-            $.handleChartItemClass(obj);
-        }
-    });
+        .on('mouseout', function() {
+            $.chartItemMouseOut($(this));
+            $.hideToolTip($('#tooltip'));
+        })
+
+        .on('click', function() {
+            chartItem = $(this);
+            if ($.isThisClickable(chartItem)) {
+                $.addPercentToBar(chartItem, 10);
+                $.handleChartItemClass(chartItem);
+            }
+        });
 
 });

@@ -1,54 +1,104 @@
 $(document).on('ready', function() {
 
-    $.addPercentToBar = function(obj, value)
+    var lastLabel;
+
+    $.addPercentToBar = function(chartItem, value)
     {
-        if (obj.hasClass('running')) {
-            barWidth = parseInt(obj.find('#bar').css('width').replace(new RegExp("px", 'g'), ""));
-            progressWidth = parseInt(obj.find('.progress').css('width').replace(new RegExp("px", 'g'), ""));
-            newBarWidth = barWidth + progressWidth * (value / 100);
-            if (newBarWidth < progressWidth) {
-                obj.find('#bar').css('width', newBarWidth);
-            } else {
-                obj.find('#bar').css('width', progressWidth);
-                $.setProcessAsFinished(obj);
+        if (chartItem.hasClass('running')) {
+            barInfo = $.getProgressBarInfo(chartItem);
+            newProgress = barInfo.progress + barInfo.bar * (value / 100);
+            if (newProgress >= barInfo.bar) {
+                newProgress = barInfo.bar;
+                $.setProcessAsFinished(chartItem);
             }
-            
+            chartItem.find('.progress').css('width', newProgress);
+        }
+        $.refreshChartItemLabel(chartItem);
+    };
+
+    $.handleChartItemClass = function(chartItem)
+    {
+        if (chartItem.hasClass('notRunning')) {
+            chartItem.removeClass('notRunning');
+            chartItem.addClass('running');
         }
     };
 
-    $.handleChartItemClass = function(obj)
+    $.displayToolTip = function(chartItem, left, top)
     {
-        if (obj.hasClass('notRunning')) {
-            obj.removeClass('notRunning');
-            obj.addClass('running');
-        }
+        window.t = setTimeout(function () {
+                chartItem.css('left', left + 15);
+                chartItem.css('top', top + 15);
+                chartItem.show();
+            }, 1000);
     };
 
-    $.displayMouseoverMsg = function(obj, left, top)
+    $.hideToolTip = function(chartItem)
     {
-        obj.css('left', left + 15);
-        obj.css('top', top + 15);
-        obj.show();
+        clearTimeout(window.t);
+        chartItem.hide();
     };
 
-    $.hideMouseoverMsg = function(obj)
+    $.setProcessAsFinished = function(chartItem)
     {
-        obj.hide();
+        chartItem.removeClass('running');
+        chartItem.removeClass('notRunning');
+        chartItem.addClass('runned');
     };
 
-    $.setProcessAsFinished = function(obj)
+    $.isThisClickable = function(chartItem)
     {
-        obj.removeClass('running');
-        obj.removeClass('notRunning');
-        obj.addClass('runned');
-    };
-
-    $.isThisClickable = function(obj)
-    {
-        if (obj.hasClass('runned')) {
+        if (chartItem.hasClass('runned')) {
             return false;
         }
         return true;
+    };
+
+    $.chartItemMouseOver = function(chartItem)
+    {
+        var label;
+        lastLabel = chartItem.find('label').html();
+        chartItem.find('.bar').css('visibility', 'hidden');
+        label = $.defineMouseOverLabel(chartItem);
+        chartItem.find('label').html(label);
+    };
+
+    $.chartItemMouseOut = function(chartItem)
+    {
+        chartItem.find('label').html(lastLabel);
+        chartItem.find('.bar').css('visibility', '');
+    };
+
+    $.calcPorcentConcluded = function(chartItem)
+    {
+        barInfo = $.getProgressBarInfo(chartItem);
+        if (barInfo.progress == 0) {
+            return 0;
+        }
+        return 100 * (barInfo.progress / barInfo.bar);
+    };
+
+    $.getProgressBarInfo = function(chartItem)
+    {
+        return {
+            bar: parseInt(chartItem.find('.bar').css('width').replace(new RegExp("px", 'g'), "")),
+            progress: parseInt(chartItem.find('.progress').css('width').replace(new RegExp("px", 'g'), ""))
+        };
+    };
+
+    $.refreshChartItemLabel = function(chartItem)
+    {
+        chartItem.find('label').html(
+            lastLabel + '<br/><br/> Concluded: ' + $.calcPorcentConcluded(chartItem) + '%'
+        );
+    };
+
+    $.defineMouseOverLabel = function(chartItem)
+    {
+        if (chartItem.hasClass('notRunning')) {
+            return lastLabel + '<br/><br/> Not started';
+        }
+        return lastLabel + '<br/><br/> Concluded: ' + $.calcPorcentConcluded(chartItem) + '%';
     };
 
 });
