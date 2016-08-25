@@ -1,13 +1,30 @@
-var proc1, proc2, proc3, proc4, proc5, link1, link2, link3, link4, graph, paper;
+var graph, paper;
+var procs = [];
+var links = [];
+var boxStyle;
+var procsInput = [];
+var linksInput = [];
 
 $(document).on('ready', function() {
 
-    var basicPadding = 30, boxWidth = 150, boxHeight = 80, basicColumnPadding = 100;
+    // *** MOCK ***
+    procsInput[0] = ['Process 1', 1, 1, 1];
+    procsInput[1] = ['Process 2', 1, 2, 1];
+    procsInput[2] = ['Process 3', 1, 3, 1];
+    procsInput[3] = ['Process 4', 2, 1, 3];
+    procsInput[4] = ['Process 5', 3, 1, 1];
+
+    linksInput[0] = [0, 3];
+    linksInput[1] = [1, 3];
+    linksInput[2] = [2, 3];
+    linksInput[3] = [3, 4];
+    // *** FIM DO MOCK ***
+
     graph = new joint.dia.Graph;
     paper = new joint.dia.Paper({
         el: $('#myholder'),
-        width: '100%',
-        height: '100%',
+        width: $(window).width(),
+        height: $(window).height(),
         model: graph,
         gridSize: 1,
         interactive: false
@@ -15,54 +32,65 @@ $(document).on('ready', function() {
 
     $.startFlowChart = function()
     {
-        graph.addCells([proc1, proc2, proc3, proc4, proc5, link1, link2, link3, link4]);
+        var chartElements = [];
+        for (i = 0; i < procs.length; i++) {
+            chartElements.push(procs[i]);
+        }
+        for (i = 0; i < links.length; i++) {
+            chartElements.push(links[i]);
+        }
+        graph.addCells(chartElements);
     };
 
     $.setAllProcessBoxes = function()
     {
-        proc1 = $.setProcessBox('Process 1', 'blue', 1, 1, 1);
-        proc2 = $.setProcessBox('Process 2', '#CCC',  1, 2, 1);
-        proc3 = $.setProcessBox('Process 3', '#CCC',  1, 3, 1);
-        proc4 = $.setProcessBox('Process 4', '#CCC',  2, 1, 3);
-        proc5 = $.setProcessBox('Process 5', '#CCC',  3, 1, 1);
+        boxStyle = $.calcBasicBoxValues();
+        for (i = 0; i < procsInput.length; i++) {
+            procs[i] = $.setProcessBox(
+                    procsInput[i][0],
+                    procsInput[i][1],
+                    procsInput[i][2],
+                    procsInput[i][3]
+                );
+        }
     };
 
     $.setAllLinks = function()
     {
-        link1 = $.setLink(proc1, proc4);
-        link2 = $.setLink(proc2, proc4);
-        link3 = $.setLink(proc3, proc4);
-        link4 = $.setLink(proc4, proc5);
+        for (i = 0; i < linksInput.length; i++) {
+            links[i] = $.setLink(linksInput[i][0], linksInput[i][1])
+        }
     };
 
-    $.setProcessBox = function(label, color, col, row, size)
+    $.setProcessBox = function(label, col, row, size)
     {
         var boxPosition = $.calcProcessBoxPosition(col, row, size);
-        height = boxHeight * size + basicPadding * (size - 1);
         return new joint.shapes.html.Element({
             position: {
                 x: boxPosition.left,
                 y: boxPosition.top
             },
             size: {
-                width: boxWidth,
-                height: height
+                width: boxStyle.width,
+                height: $.calcProcessBoxHeight(size)
             },
             label: label
         });
     };
 
-    $.setLink = function(source, target)
+    $.setLink = function(sourceId, targetId)
     {
-        positions = $.setLinksPositions(
-            source.attributes.position,
-            source.attributes.size,
-            target.attributes.position,
-            target.attributes.size
+        var source = procs[sourceId].attributes;
+        var target = procs[targetId].attributes;
+        var positions = $.setLinksPositions(
+            source.position,
+            source.size,
+            target.position,
+            target.size
         );
         return new joint.dia.Link({
-            source: { x: positions[0], y: positions[1] },
-            target: { x: positions[2], y: positions[3] },
+            source: { x: positions.sourceX, y: positions.sourceY },
+            target: { x: positions.targetX, y: positions.targetY },
             interactive: false,
             attrs: {
                 '.marker-target': { d: 'M 10 0 L 0 5 L 10 10 z' }
@@ -80,15 +108,37 @@ $(document).on('ready', function() {
             targetY = targetPos.y + (targetSize.height / 2);
             srcY = targetY;
         }
-        return [srcX, srcY, targetX, targetY];
+        return {
+            sourceX: srcX,
+            sourceY: srcY,
+            targetX: targetX,
+            targetY: targetY
+        };
     };
 
     $.calcProcessBoxPosition = function(col, row)
     {
-        var position = {};
-        position.left = (boxWidth + basicColumnPadding) * (col - 1) + basicPadding;
-        position.top = (boxHeight + basicPadding) * (row - 1) + basicPadding;
-        return position;
+        return {
+            left: (boxStyle.width + boxStyle.rightMargin) * (col - 1) + boxStyle.bottomMargin,
+            top: (boxStyle.height + boxStyle.bottomMargin) * (row - 1) + boxStyle.bottomMargin
+        };
+    };
+
+    $.calcProcessBoxHeight = function(size)
+    {
+        return boxStyle.height * size + boxStyle.bottomMargin * (size - 1);
+    };
+
+    $.calcBasicBoxValues = function()
+    {
+        var totalWidth = $(window).width();
+        var totalHeight = $(window).height();
+        return {
+            width: Math.round(totalWidth * .2),
+            height: Math.round(totalHeight * .2),
+            bottomMargin: Math.round(totalHeight * .1),
+            rightMargin: Math.round(totalWidth * .1),
+        };
     };
 
 });

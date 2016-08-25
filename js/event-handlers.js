@@ -1,14 +1,18 @@
 $(document).on('ready', function() {
 
+    $(window).resize(function() {
+        $.scalePaper();
+    });
+
     $('.chartItem')
 
         .on('mouseover', function(e) {
-            $.chartItemMouseOver($(this));
+            $.displayInfoAndStyle($(this));
             $.displayToolTip($('#tooltip'), e.pageX, e.pageY);
         })
 
         .on('mouseout', function() {
-            $.chartItemMouseOut($(this));
+            $.hideInfoAndStyle($(this));
             $.hideToolTip($('#tooltip'));
         })
 

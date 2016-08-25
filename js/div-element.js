@@ -3,10 +3,11 @@
 
 joint.shapes.html = {};
 joint.shapes.html.Element = joint.shapes.basic.Rect.extend({
+    markup: '<g class="rotatable"><g class="scalable"><rect/></g><text/></g>',
     defaults: joint.util.deepSupplement({
         type: 'html.Element',
         attrs: {
-            rect: { stroke: 'none', 'fill-opacity': 0 }
+            rect: { 'follow-scale': true, stroke: 'none', 'fill-opacity': 0 }
         }
     }, joint.shapes.basic.Rect.prototype.defaults)
 });
@@ -26,8 +27,9 @@ joint.shapes.html.ElementView = joint.dia.ElementView.extend({
     initialize: function() {
         _.bindAll(this, 'updateBox');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
-
         this.$box = $(_.template(this.template)());
+        // Update the box position whenever the underlying model changes.
+        this.model.on('change', this.updateBox, this);
         this.updateBox();
     },
     render: function() {
@@ -37,13 +39,9 @@ joint.shapes.html.ElementView = joint.dia.ElementView.extend({
         return this;
     },
     updateBox: function() {
-        // Set the position and dimension of the box so that it covers the JointJS element.
         var bbox = this.model.getBBox();
-        // Example of updating the HTML with a data stored in the cell model.
         this.$box.find('label').text(this.model.get('label'));
         this.$box.css({ width: bbox.width, height: bbox.height, left: bbox.x, top: bbox.y, transform: 'rotate(' + (this.model.get('angle') || 0) + 'deg)' });
-    },
-    removeBox: function(evt) {
-        this.$box.remove();
     }
+    
 });

@@ -54,7 +54,7 @@ $(document).on('ready', function() {
         return true;
     };
 
-    $.chartItemMouseOver = function(chartItem)
+    $.displayInfoAndStyle = function(chartItem)
     {
         var label;
         lastLabel = chartItem.find('label').html();
@@ -63,7 +63,7 @@ $(document).on('ready', function() {
         chartItem.find('label').html(label);
     };
 
-    $.chartItemMouseOut = function(chartItem)
+    $.hideInfoAndStyle = function(chartItem)
     {
         chartItem.find('label').html(lastLabel);
         chartItem.find('.bar').css('visibility', '');
@@ -75,7 +75,7 @@ $(document).on('ready', function() {
         if (barInfo.progress == 0) {
             return 0;
         }
-        return 100 * (barInfo.progress / barInfo.bar);
+        return Math.round(100 * (barInfo.progress / barInfo.bar));
     };
 
     $.getProgressBarInfo = function(chartItem)
@@ -99,6 +99,12 @@ $(document).on('ready', function() {
             return lastLabel + '<br/><br/> Not started';
         }
         return lastLabel + '<br/><br/> Concluded: ' + $.calcPorcentConcluded(chartItem) + '%';
+    };
+
+    $.scalePaper = function()
+    {
+        paper.setDimensions($('#myholder').width());
+        paper.scaleContentToFit();
     };
 
 });
