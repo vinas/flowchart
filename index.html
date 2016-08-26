@@ -1,24 +1,26 @@
 <html>
 
 <head>
-	<link rel="stylesheet" href="css/joint.css">
-	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/joint.min.css">
+	<link rel="stylesheet" href="css/flowchart-styles.css">
 	<script src="js/libs/jquery-2.1.1.min.js"></script>
 	<script src="js/libs/lodash.min.js"></script>
 	<script src="js/libs/backbone-min.js"></script>
-	<script src="js/libs/joint.js"></script>
-	<script src="js/div-element.js"></script>
-	<script src="js/setup-methods.js"></script>
-	<script src="js/interaction-methods.js"></script>
-	<script src="js/routing.js"></script>
-	<script src="js/event-handlers.js"></script>
+	<script src="js/libs/joint.min.js"></script>
+	<script src="js/flowchart-div-element.js"></script>
+	<script src="js/flowchart-setup-methods.js"></script>
+	<script src="js/flowchart-interaction-methods.js"></script>
+	<script src="js/flowchart-startup.js"></script>
+	<script src="js/flowchart-event-handlers.js"></script>
 </head>
 
 <body leftmargin="0" rightmargin="0" topmargin="0" bottommargin="0">
-	<div id="myholder"></div>
-	<div id="tooltip">
-		The first click will activate this process.<br/><br/>
-		Every other click will increase<br/>total progress in 10%.
+	<div id="flochart-container">
+		<div id="paper"></div>
+		<div id="tooltip">
+			The first click will activate this process.<br/><br/>
+			Every other click will increase<br/>total progress in 10%.
+		</div>
 	</div>
 </body>
 

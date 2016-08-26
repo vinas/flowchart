@@ -1,7 +1,5 @@
-// Create a custom element.
-// ------------------------
-
 joint.shapes.html = {};
+
 joint.shapes.html.Element = joint.shapes.basic.Rect.extend({
     markup: '<g class="rotatable"><g class="scalable"><rect/></g><text/></g>',
     defaults: joint.util.deepSupplement({
@@ -11,9 +9,6 @@ joint.shapes.html.Element = joint.shapes.basic.Rect.extend({
         }
     }, joint.shapes.basic.Rect.prototype.defaults)
 });
-
-// Create a custom view for that element that displays an HTML div above it.
-// -------------------------------------------------------------------------
 
 joint.shapes.html.ElementView = joint.dia.ElementView.extend({
 
@@ -28,7 +23,6 @@ joint.shapes.html.ElementView = joint.dia.ElementView.extend({
         _.bindAll(this, 'updateBox');
         joint.dia.ElementView.prototype.initialize.apply(this, arguments);
         this.$box = $(_.template(this.template)());
-        // Update the box position whenever the underlying model changes.
         this.model.on('change', this.updateBox, this);
         this.updateBox();
     },

@@ -1,8 +1,10 @@
 $(document).on('ready', function() {
 
+    /*
     $(window).resize(function() {
         $.scalePaper();
     });
+    */
 
     $('.chartItem')
 
@@ -17,7 +19,7 @@ $(document).on('ready', function() {
         })
 
         .on('click', function() {
-            chartItem = $(this);
+            var chartItem = $(this);
             if ($.isThisClickable(chartItem)) {
                 $.addPercentToBar(chartItem, 10);
                 $.handleChartItemClass(chartItem);

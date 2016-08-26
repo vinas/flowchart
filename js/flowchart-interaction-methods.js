@@ -5,8 +5,8 @@ $(document).on('ready', function() {
     $.addPercentToBar = function(chartItem, value)
     {
         if (chartItem.hasClass('running')) {
-            barInfo = $.getProgressBarInfo(chartItem);
-            newProgress = barInfo.progress + barInfo.bar * (value / 100);
+            var barInfo = $.getProgressBarInfo(chartItem);
+            var newProgress = barInfo.progress + barInfo.bar * (value / 100);
             if (newProgress >= barInfo.bar) {
                 newProgress = barInfo.bar;
                 $.setProcessAsFinished(chartItem);
@@ -43,12 +43,12 @@ $(document).on('ready', function() {
     {
         chartItem.removeClass('running');
         chartItem.removeClass('notRunning');
-        chartItem.addClass('runned');
+        chartItem.addClass('ran');
     };
 
     $.isThisClickable = function(chartItem)
     {
-        if (chartItem.hasClass('runned')) {
+        if (chartItem.hasClass('ran')) {
             return false;
         }
         return true;
@@ -57,10 +57,11 @@ $(document).on('ready', function() {
     $.displayInfoAndStyle = function(chartItem)
     {
         var label;
-        lastLabel = chartItem.find('label').html();
+        var labelElement = chartItem.find('label');
+        lastLabel = labelElement.html();
         chartItem.find('.bar').css('visibility', 'hidden');
         label = $.defineMouseOverLabel(chartItem);
-        chartItem.find('label').html(label);
+        labelElement.html(label);
     };
 
     $.hideInfoAndStyle = function(chartItem)
@@ -71,11 +72,11 @@ $(document).on('ready', function() {
 
     $.calcPorcentConcluded = function(chartItem)
     {
-        barInfo = $.getProgressBarInfo(chartItem);
+        var barInfo = $.getProgressBarInfo(chartItem);
         if (barInfo.progress == 0) {
             return 0;
         }
-        return Math.round(100 * (barInfo.progress / barInfo.bar));
+        return Math.ceil(100 * (barInfo.progress / barInfo.bar));
     };
 
     $.getProgressBarInfo = function(chartItem)
@@ -101,10 +102,12 @@ $(document).on('ready', function() {
         return lastLabel + '<br/><br/> Concluded: ' + $.calcPorcentConcluded(chartItem) + '%';
     };
 
+    /*
     $.scalePaper = function()
     {
-        paper.setDimensions($('#myholder').width());
+        paper.setDimensions($('#paper').width());
         paper.scaleContentToFit();
     };
+    */
 
 });

@@ -1,28 +1,8 @@
-var graph, paper;
-var procs = [];
-var links = [];
-var boxStyle;
-var procsInput = [];
-var linksInput = [];
-
 $(document).on('ready', function() {
-
-    // *** MOCK ***
-    procsInput[0] = ['Process 1', 1, 1, 1];
-    procsInput[1] = ['Process 2', 1, 2, 1];
-    procsInput[2] = ['Process 3', 1, 3, 1];
-    procsInput[3] = ['Process 4', 2, 1, 3];
-    procsInput[4] = ['Process 5', 3, 1, 1];
-
-    linksInput[0] = [0, 3];
-    linksInput[1] = [1, 3];
-    linksInput[2] = [2, 3];
-    linksInput[3] = [3, 4];
-    // *** FIM DO MOCK ***
 
     graph = new joint.dia.Graph;
     paper = new joint.dia.Paper({
-        el: $('#myholder'),
+        el: $('#paper'),
         width: $(window).width(),
         height: $(window).height(),
         model: graph,
@@ -32,14 +12,8 @@ $(document).on('ready', function() {
 
     $.startFlowChart = function()
     {
-        var chartElements = [];
-        for (i = 0; i < procs.length; i++) {
-            chartElements.push(procs[i]);
-        }
-        for (i = 0; i < links.length; i++) {
-            chartElements.push(links[i]);
-        }
-        graph.addCells(chartElements);
+
+        graph.addCells($.setupChartElements(procs, links));
     };
 
     $.setAllProcessBoxes = function()
@@ -100,10 +74,10 @@ $(document).on('ready', function() {
 
     $.setLinksPositions = function(srcPos, srcSize, targetPos, targetSize)
     {
-        srcX = srcPos.x + srcSize.width;
-        srcY = srcPos.y + (srcSize.height / 2);
-        targetX = targetPos.x;
-        targetY = srcY;
+        var srcX = srcPos.x + srcSize.width;
+        var srcY = srcPos.y + (srcSize.height / 2);
+        var targetX = targetPos.x;
+        var targetY = srcY;
         if (targetY > (targetPos.y + targetSize.height)) {
             targetY = targetPos.y + (targetSize.height / 2);
             srcY = targetY;
@@ -139,6 +113,17 @@ $(document).on('ready', function() {
             bottomMargin: Math.round(totalHeight * .1),
             rightMargin: Math.round(totalWidth * .1),
         };
+    };
+
+    $.setupChartElements = function() {
+        var chartElements = [];
+        for (i = 0; i < procs.length; i++) {
+            chartElements.push(procs[i]);
+        }
+        for (i = 0; i < links.length; i++) {
+            chartElements.push(links[i]);
+        }
+        return chartElements;
     };
 
 });
